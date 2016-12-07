@@ -17,16 +17,12 @@
 <div id="range" class="container-fluid"></div>
 <script>
   //$.getJSON('http://rmapi.niupixuan.me/v1/interest/percent?symbol=eurusd&limit=all',function(data){
-  $.getJSON('http://rmapi.niupixuan.me/v1/interest/percent',function(data){
-  //$.getJSON('../../www/static/json/data-temp.json',function(data){
-    for(let i=0; i<data.length; i++) {
-      let item = data[i];
-      let NEWDATE = item.NEWDATE;
-      item.NEWDATE = new Date(NEWDATE).getTime();
-    }
+  //$.getJSON('http://rmapi.niupixuan.me/v1/interest/percent?symbol=gold',function(data){
+  //$.getJSON('http://rmapi.niupixuan.me/v1/interest/percent',function(data){
+  $.getJSON('/static/json/data-temp.json',function(data){
     var Frame = G2.Frame;
     var frame = new Frame(data);
-    frame = Frame.combinColumns(frame, ["息前手数", '息前次数','息后手数','息后次数'], 'value', '类型', 'NEWDATE');
+    frame = Frame.combinColumns(frame,['息前手数','息前次数','息后手数','息后次数'], 'value', 'type', 'time');
     var chart = new G2.Chart({
       id: 'c1',
       forceFit:'true',//宽度自动
@@ -37,49 +33,53 @@
     });
 
     chart.source(frame, {
-      NEWDATE: {
-      type: 'timeCat',
-      nice: false,
-      mask: 'yyyy-mm-dd H:MM:ss',
-      tickCount: 3
+      time: {
+        type: 'timeCat',
+        mask: 'mm-dd H:MM:ss',
+        tickCount: 6
       },
       value: {
         alias: ' '
+      },
+      type: {
+        alias: '类型'
       }
     });
 
-    chart.axis('NEWDATE', {
+    chart.axis('time', {
       tickLine: {
-        stroke: '#000',
+        stroke: '#333',
         value: 6
       },
-      title: null
+      title: null,
+      line: {
+        stroke: '#333'
+      },
     });
 
     chart.axis('value', {
       tickLine: {
-        stroke: '#000',
+        stroke: '#333',
         value: 6
       },
       labels: {
         label: {
-          fill: '#000'
+          fill: '#333'
         }
       },
       line: {
-        stroke: '#000'
+        stroke: '#333'
       },
       grid: null
     });
 
-    chart.line().position('NEWDATE*value').color('类型', ['#1f77b4', '#ff7f0e', '#2ca02c','#A020F0']).shape('spline').size(2);
+    chart.line().position('time*value').color('type', ['#1f77b4', '#ff7f0e', '#2ca02c','#A020F0']).shape('spline').size(2);
     chart.render();
     var range = new G2.Plugin.range({
       id: "range",
-      //width: 840,
       forceFit:'true',//宽度自动
       height: 30,
-      dim: 'NEWDATE'
+      dim: 'time'
     });
     range.source(frame);
     range.link([chart]);
