@@ -19,9 +19,9 @@
   //$.getJSON('http://rmapi.niupixuan.me/v1/interest/percent?symbol=eurusd&limit=all',function(data){
   $.getJSON('http://rmapi.niupixuan.me/v1/interest/percent',function(data){
   //$.getJSON('../../www/static/json/data-temp.json',function(data){
-    for(var i=0;i<data.length;i++) {
-      var item = data[i];
-      var NEWDATE = item.NEWDATE;
+    for(let i=0; i<data.length; i++) {
+      let item = data[i];
+      let NEWDATE = item.NEWDATE;
       item.NEWDATE = new Date(NEWDATE).getTime();
     }
     var Frame = G2.Frame;
@@ -32,20 +32,22 @@
       forceFit:'true',//宽度自动
       height : 500,
       plotCfg: {
-        margin: [20, 120, 80, 80]
+        margin: [20, 120, 80, 20]
       }
     });
+
     chart.source(frame, {
       NEWDATE: {
       type: 'timeCat',
       nice: false,
       mask: 'yyyy-mm-dd H:MM:ss',
-      tickCount: 6
+      tickCount: 3
       },
       value: {
         alias: ' '
       }
     });
+
     chart.axis('NEWDATE', {
       tickLine: {
         stroke: '#000',
@@ -53,6 +55,7 @@
       },
       title: null
     });
+
     chart.axis('value', {
       tickLine: {
         stroke: '#000',
@@ -68,6 +71,7 @@
       },
       grid: null
     });
+
     chart.line().position('NEWDATE*value').color('类型', ['#1f77b4', '#ff7f0e', '#2ca02c','#A020F0']).shape('spline').size(2);
     chart.render();
     var range = new G2.Plugin.range({
