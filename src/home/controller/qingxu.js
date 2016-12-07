@@ -9,6 +9,7 @@ export default class extends Base {
    */
   indexAction(){
     this.assign("title", "情绪指标（黄金）");
+    this.assign("gold", "active");
     return this.display();
   }
   /**
@@ -17,6 +18,7 @@ export default class extends Base {
    */
   gbpusdAction(){
     this.assign("title", "情绪指标（英镑）");
+    this.assign("gbpusd", "active");
     return this.display();
   }
   /**
@@ -25,6 +27,7 @@ export default class extends Base {
    */
   eurusdAction(){
     this.assign("title", "情绪指标（欧元）");
+    this.assign("eurusd", "active");
     return this.display();
   }
 }
