@@ -17,8 +17,8 @@
 <div id="range" class="container-fluid"></div>
 <script>
   //$.getJSON('http://rmapi.niupixuan.me/v1/interest/percent?symbol=eurusd&limit=all',function(data){
-  //$.getJSON('http://rmapi.niupixuan.me/v1/interest/percent?symbol=eurusd',function(data){
-  $.getJSON('/static/json/data-temp.json',function(data){
+  $.getJSON('http://rmapi.niupixuan.me/v1/interest/percent?symbol=eurusd',function(data){
+  //$.getJSON('/static/json/data-temp.json',function(data){
     var Frame = G2.Frame;
     var frame = new Frame(data);
     frame = Frame.combinColumns(frame, ["息前手数", "息前次数","息后手数","息后次数"], 'value', 'type', 'time');
