@@ -14,7 +14,7 @@
 
 {% block connect %}
 <div id="c1" class="container-fluid"></div>
-<div id="range" class="container-fluid"></div>
+<div id="range" class="container-fluid" style="margin-right:30px;"></div>
 <script>
   //$.getJSON('http://rmapi.niupixuan.me/v1/interest/percent?symbol=eurusd&limit=all',function(data){
   $.getJSON('http://rmapi.niupixuan.me/v1/interest/percent?symbol=gbpusd',function(data){
@@ -32,10 +32,10 @@
     });
     chart.source(frame, {
       time: {
-      type: 'timeCat',
-      nice: false,
-      mask: 'yyyy/mm/dd hh:mm:ss',
-      tickCount: 6
+        type: 'timeCat',
+        nice: false,
+        mask: 'yyyy/mm/dd hh:mm:ss',
+        tickCount: 6
       },
       value: {
         alias: ' '
