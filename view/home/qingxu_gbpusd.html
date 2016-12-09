@@ -21,7 +21,7 @@
   //$.getJSON('/static/json/data-temp.json',function(data){
     var Frame = G2.Frame;
     var frame = new Frame(data);
-    frame = Frame.combinColumns(frame, ['息前手数','息前次数','息后手数','息后次数'], 'value', 'type', 'time');
+    frame = Frame.combinColumns(frame, ['息前次数','息后手数','息后次数','息前手数'], 'value', 'type', 'time');
     var chart = new G2.Chart({
       id: 'c1',
       forceFit:'true',//宽度自动
@@ -41,7 +41,8 @@
         alias: ' '
       },
       type:{
-        alias:'类型'
+        alias:'类型',
+        value: ['息前手数','息前次数','息后手数','息后次数'], //定义顺序
       }
     });
     chart.axis('time', {
