@@ -1,0 +1,136 @@
+{% extends "../common/layout_home.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+{% endblock %}
+
+{% block js %}
+<script src="https://a.alipayobjects.com/jquery/jquery/1.11.1/jquery.js"></script>
+<script src="http://cdn.bootcss.com/echarts/3.3.2/echarts.common.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block connect %}
+<div id="main" style="width: 1000px;height:500px;"></div>
+<!-- <div id="main" class="container-fluid"></div> -->
+<!-- <div id="main" class="container-fluid" style="margin-right:30px;"></div> -->
+<script>
+function splitData(rawData) {
+  var time = [];
+  var xqss = [];
+  var xqcs = [];
+  var xhss = [];
+  var xhcs = [];
+  for (var i = 0; i < rawData.length; i++) {
+      time.push(rawData[i][0]);
+      xqss.push(rawData[i][1]);
+      xqcs.push(rawData[i][2]);
+      xhss.push(rawData[i][3]);
+      xhcs.push(rawData[i][4]);
+  }
+  return {
+      time: time,
+      xqss: xqss,
+      xqcs: xqcs,
+      xhss: xhss,
+      xhcs: xhcs
+  };
+}
+
+$.get('/static/json/data-qingxu-new.json', function (rawData) {
+  var data = splitData(rawData);
+  var myChart = echarts.init(document.getElementById('main'));
+  myChart.setOption(option = {
+      animation: false,
+      legend: {
+          right: '0%',
+          bottom:'10%',
+          orient:'vertical',
+          data: ['息前手数', '息前次数', '息后手数', '息后次数']
+      },
+      tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+              type: 'line'
+          }
+      },
+      grid: [
+          {
+              left: '8%',
+              right: '10%',
+              height: '80%',
+              width:'80%'
+          }
+      ],
+      xAxis: [
+          {
+              type: 'category',
+              data: data.time,
+              scale: true,
+              boundaryGap : false,
+              axisLine: {onZero: false},
+              splitLine: {show: false},
+              // splitNumber: 20,
+              //min: 'dataMin',
+              // max: 'dataMax'
+          }
+      ],
+      yAxis: [
+          {
+              scale: true,
+              splitArea: {
+                  show: true
+              }
+          },
+          {
+              scale: true,
+              // splitNumber: 2,
+              axisLabel: {show: false},
+              axisLine: {show: false},
+              axisTick: {show: false},
+              splitLine: {show: false}
+          }
+      ],
+      dataZoom: [
+          {
+              type: 'inside',
+              xAxisIndex: [0],
+              start: 98,
+              end: 100
+          },
+          {
+              show: true,
+              type: 'slider',
+              top: '2%'
+          }
+      ],
+      series: [
+          {
+              name: '息前手数',
+              type: 'line',
+              data: data.xqss,
+              smooth: true,
+          },
+          {
+              name: '息前次数',
+              type: 'line',
+              data: data.xqcs,
+              smooth: true,
+          },
+          {
+              name: '息后手数',
+              type: 'line',
+              data: data.xhss,
+              smooth: true,
+          },
+          {
+              name: '息后次数',
+              type: 'line',
+              data: data.xhcs,
+              smooth: true,
+          },
+      ]
+  }, true);
+});
+</script>
+{% endblock %}
