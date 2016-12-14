@@ -1,0 +1,80 @@
+{% extends "../common/layout_home.html" %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="https://os.alipayobjects.com/rmsportal/UBXCMkzNVlaZYNs.css">
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+{% endblock %}
+
+{% block js %}
+<script src="https://a.alipayobjects.com/jquery/jquery/1.11.1/jquery.js"></script>
+<script src="https://a.alipayobjects.com/g/datavis/g2/2.1.5/g2.js"></script>
+<script src="https://as.alipayobjects.com/g/datavis/g-plugin-range/0.0.9/index.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block connect %}
+<div id="c1" class="container-fluid"></div>
+<div id="range" class="container-fluid" style="margin-right:30px;"></div>
+<script>
+  $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=gbpusd',function(data){
+    var Frame = G2.Frame;
+    var frame = new Frame(data);
+    frame = Frame.combinColumns(frame, ['算法'], 'value', 'type', 'time');
+    var chart = new G2.Chart({
+      id: 'c1',
+      forceFit:'true',//宽度自动
+      height : 500,
+      plotCfg: {
+        margin: [20, 120, 80, 80]
+      }
+    });
+    chart.source(frame, {
+      time: {
+        type: 'timeCat',
+        mask: 'yyyy/mm/dd hh:MM:ss',
+        tickCount: 6
+      },
+      value: {
+        alias: ' '
+      },
+      type:{
+        alias:'类型',
+        //value: ['息后手数','息后次数','息前手数','息前次数'], //定义顺序
+      }
+    });
+    chart.axis('time', {
+      tickLine: {
+        stroke: '#000',
+        value: 6
+      },
+      title: null
+    });
+    chart.axis('value', {
+      tickLine: {
+        stroke: '#000',
+        value: 6
+      },
+      labels: {
+        label: {
+          fill: '#000'
+        }
+      },
+      line: {
+        stroke: '#000'
+      },
+      grid: null
+    });
+    chart.line().position('time*value').color('type', ['#1f77b4']).shape('spline').size(2);
+    chart.render();
+    var range = new G2.Plugin.range({
+      id: "range",
+      forceFit:'true',//宽度自动
+      height: 30,
+      dim: 'time'
+    });
+    range.source(frame);
+    range.link([chart]);
+    range.render();
+  });
+</script>
+{% endblock %}
