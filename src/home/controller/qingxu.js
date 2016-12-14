@@ -30,13 +30,4 @@ export default class extends Base {
     this.assign("eurusd", "active");
     return this.display();
   }
-  /**
-   * new action
-   * @return {Promise} []
-   */
-  newAction(){
-    this.assign("title", "新指标");
-    this.assign("new", "active");
-    return this.display();
-  }
 }
