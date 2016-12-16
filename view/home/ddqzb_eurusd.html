@@ -7,74 +7,136 @@
 
 {% block js %}
 <script src="https://a.alipayobjects.com/jquery/jquery/1.11.1/jquery.js"></script>
-<script src="https://a.alipayobjects.com/g/datavis/g2/2.1.5/g2.js"></script>
-<script src="https://as.alipayobjects.com/g/datavis/g-plugin-range/0.0.9/index.js"></script>
+<script src="http://cdn.bootcss.com/echarts/3.3.2/echarts.common.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
 {% endblock %}
 
 {% block connect %}
-<div id="c1" class="container-fluid"></div>
-<div id="range" class="container-fluid" style="margin-right:30px;"></div>
+<div id="main" style="width: 2000px;height:1000px;"></div>
 <script>
-  $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=eurusd',function(data){
-    var Frame = G2.Frame;
-    var frame = new Frame(data);
-    frame = Frame.combinColumns(frame, ['算法','最新价'], 'value', 'type', 'time');
-    var chart = new G2.Chart({
-      id: 'c1',
-      forceFit:'true',//宽度自动
-      height : 500,
-      plotCfg: {
-        margin: [20, 120, 80, 80]
-      }
-    });
-    chart.source(frame, {
-      time: {
-        type: 'timeCat',
-        mask: 'yyyy/mm/dd HH:MM:ss',
-        tickCount: 6
-      },
-      value: {
-        alias: ' '
-      },
-      type:{
-        alias:'类型',
-        //value: ['息后手数','息后次数','息前手数','息前次数'], //定义顺序
-      }
-    });
-    chart.axis('time', {
-      tickLine: {
-        stroke: '#000',
-        value: 6
-      },
-      title: null
-    });
-    chart.axis('value', {
-      tickLine: {
-        stroke: '#000',
-        value: 6
-      },
-      labels: {
-        label: {
-          fill: '#000'
-        }
-      },
-      line: {
-        stroke: '#000'
-      },
-      grid: null
-    });
-    chart.line().position('time*value').color('type', ['#1f77b4', '#ff7f0e']).shape('spline').size(2);
-    chart.render();
-    var range = new G2.Plugin.range({
-      id: "range",
-      forceFit:'true',//宽度自动
-      height: 30,
-      dim: 'time'
-    });
-    range.source(frame);
-    range.link([chart]);
-    range.render();
+function splitData(rawData) {
+  var time = [];
+  var zxj = [];
+  var sf = [];
+  for (var i = 0; i < rawData.length; i++) {
+      time.push(rawData[i][0]);
+      zxj.push(rawData[i][1]);
+      sf.push(rawData[i][2]);
+  }
+  return {
+      time: time,
+      zxj: zxj,
+      sf: sf
+  };
+}
+// $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=gbpusd',function(data){
+$.getJSON('/static/json/data-ddqzb-eurusd.json',function(rawData){
+    var data = splitData(rawData);
+    var myChart = echarts.init(document.getElementById('main'));
+    myChart.setOption(option = {
+        animation: false,
+        legend: {
+            right: '2%',
+            top:'40%',
+            orient:'vertical',
+            data: ['最新价', '算法']
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'line'
+            }
+        },
+        grid: [
+            {
+                left: '10%',
+                right: '8%',
+                height: '35%'
+            },
+            {
+                left: '10%',
+                right: '8%',
+                top: '45%',
+                height: '35%'
+            }
+        ],
+        xAxis: [
+            {
+                type: 'category',
+                data: data.time,
+                scale: true,
+                boundaryGap : false,
+                axisLine: {onZero: false},
+                splitLine: {show: true},
+                // splitNumber: 20,
+                min: 'dataMin',
+                max: 'dataMax'
+            },
+            {
+                type: 'category',
+                gridIndex: 1,
+                data: data.time,
+                scale: true,
+                boundaryGap : false,
+                axisLine: {onZero: false},
+                axisTick: {show: false},
+                splitLine: {show: true},
+                axisLabel: {show: true},
+                splitNumber: 20,
+                min: 'dataMin',
+                max: 'dataMax'
+            }
+        ],
+        yAxis: [
+            {
+                scale: true,
+                splitArea: {
+                    show: true
+                }
+            },
+            {
+                scale: true,
+                gridIndex: 1,
+                // data:data.sf,
+                splitNumber: 2,
+                axisLabel: {show: false},
+                axisLine: {show: false},
+                axisTick: {show: false},
+                splitLine: {show: false}
+            }
+        ],
+        dataZoom: [
+            {
+                type: 'inside',
+                xAxisIndex: [0,1],
+                start: 98,
+                end: 100
+            },
+            {
+                show: true,
+                xAxisIndex: [0,1],
+                type: 'slider',
+                top: '85%',
+                start: 98,
+                end: 100
+            }
+        ],
+        series: [
+            {
+                name: '最新价',
+                type: 'line',
+                data: data.zxj,
+                smooth: true,
+            },
+            {
+                name: '算法',
+                type: 'line',
+                xAxisIndex: 1,
+                yAxisIndex: 1,
+                data: data.sf
+            }
+        ]
+    }, true);
   });
-</script>
+  </script>
 {% endblock %}
