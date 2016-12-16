@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block connect %}
-<div id="main" style="width: 2000px;height:1000px;"></div>
+<div id="main" style="width:90%;height:800px;"></div>
 <script>
 function splitData(rawData) {
   var time = [];
@@ -30,7 +30,8 @@ function splitData(rawData) {
   };
 }
 // $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=gbpusd',function(data){
-$.getJSON('/static/json/data-ddqzb-gbpusd.json',function(rawData){
+$.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GBPUSD',function(rawData){
+// $.getJSON('/static/json/data-ddqzb-gbpusd.json',function(rawData){
     var data = splitData(rawData);
     var myChart = echarts.init(document.getElementById('main'));
     myChart.setOption(option = {
