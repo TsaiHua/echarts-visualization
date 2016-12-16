@@ -10,6 +10,7 @@ export default class extends Base {
   indexAction(){
     //auto render template file index_index.html
     this.assign("title", "操盘手");
+    this.assign("caopan", "active");
     return this.display();
   }
 }

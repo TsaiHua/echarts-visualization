@@ -16,12 +16,10 @@
 <div id="c1" class="container-fluid"></div>
 <div id="range" class="container-fluid" style="margin-right:30px;"></div>
 <script>
-  //$.getJSON('http://rmapi.niupixuan.me/v1/interest/percent?symbol=eurusd&limit=all',function(data){
-  $.getJSON('http://rmapi.niupixuan.me/v1/interest/percent?symbol=eurusd',function(data){
-  //$.getJSON('/static/json/data-temp.json',function(data){
+  $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=eurusd',function(data){
     var Frame = G2.Frame;
     var frame = new Frame(data);
-    frame = Frame.combinColumns(frame, ['息前次数','息后手数','息后次数','息前手数'], 'value', 'type', 'time');
+    frame = Frame.combinColumns(frame, ['算法'], 'value', 'type', 'time');
     var chart = new G2.Chart({
       id: 'c1',
       forceFit:'true',//宽度自动
@@ -33,8 +31,7 @@
     chart.source(frame, {
       time: {
         type: 'timeCat',
-        nice: false,
-        mask: 'yyyy/mm/dd hh:MM:ss',
+        mask: 'yyyy/mm/dd HH:MM:ss',
         tickCount: 6
       },
       value: {
@@ -42,7 +39,7 @@
       },
       type:{
         alias:'类型',
-        value: ['息前手数','息前次数','息后手数','息后次数'], //定义顺序
+        //value: ['息后手数','息后次数','息前手数','息前次数'], //定义顺序
       }
     });
     chart.axis('time', {
@@ -67,7 +64,7 @@
       },
       grid: null
     });
-    chart.line().position('time*value').color('type', ['#1f77b4', '#ff7f0e', '#2ca02c','#A020F0']).shape('spline').size(2);
+    chart.line().position('time*value').color('type', ['#1f77b4']).shape('spline').size(2);
     chart.render();
     var range = new G2.Plugin.range({
       id: "range",

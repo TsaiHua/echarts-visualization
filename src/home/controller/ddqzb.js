@@ -8,8 +8,8 @@ export default class extends Base {
    * @return {Promise} []
    */
   indexAction(){
-    this.assign("title", "情绪指标（黄金）");
-    this.assign("gold", "active");
+    this.assign("title", "多单权重比（黄金）");
+    this.assign("ddqzbgold", "active");
     return this.display();
   }
   /**
@@ -17,8 +17,8 @@ export default class extends Base {
    * @return {Promise} []
    */
   gbpusdAction(){
-    this.assign("title", "情绪指标（英镑）");
-    this.assign("gbpusd", "active");
+    this.assign("title", "多单权重比（英镑）");
+    this.assign("ddqzbgbp", "active");
     return this.display();
   }
   /**
@@ -26,8 +26,8 @@ export default class extends Base {
    * @return {Promise} []
    */
   eurusdAction(){
-    this.assign("title", "情绪指标（欧元）");
-    this.assign("eurusd", "active");
+    this.assign("title", "多单权重比（欧元）");
+    this.assign("ddqzbeur", "active");
     return this.display();
   }
 }

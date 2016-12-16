@@ -10,6 +10,7 @@ export default class extends Base {
   indexAction(){
     //auto render template file index_index.html
     this.assign("title", "曲线");
+    this.assign("quxian", "active");
     return this.display();
   }
 }

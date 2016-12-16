@@ -10,6 +10,7 @@ export default class extends Base {
   indexAction(){
     //auto render template file index_index.html
     this.assign("title", "易经");
+    this.assign("yijing", "active");
     return this.display();
   }
 }
