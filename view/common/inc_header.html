@@ -5,16 +5,36 @@
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="{{gold}}"><a href="/home/qingxu/index">情绪(黄金)</a></li>
-        <li class="{{eurusd}}"><a href="/home/qingxu/eurusd">情绪(欧元)</a></li>
-        <li class="{{gbpusd}}"><a href="/home/qingxu/gbpusd">情绪(英镑)</a></li>
-        <li class="{{ddqzgold}}"><a href="/home/ddqz/index">多单权重(黄金)</a></li>
-        <li class="{{ddqzeur}}"><a href="/home/ddqz/eurusd">多单权重(欧元)</a></li>
-        <li class="{{ddqzgbp}}"><a href="/home/ddqz/gbpusd">多单权重(英镑)</a></li>
-        <li class="{{ddqzbgold}}"><a href="/home/ddqzb/index">多单权重行情(黄金)</a></li>
-        <li class="{{ddqzbeur}}"><a href="/home/ddqzb/eurusd">多单权重行情(欧元)</a></li>
-        <li class="{{ddqzbgbp}}"><a href="/home/ddqzb/gbpusd">多单权重行情(英镑)</a></li>
+        <li class="dropdown" style="margin-left:20px">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">情绪<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li class="{{gold}}"><a href="/home/qingxu/index">情绪(黄金)</a></li>
+            <li class="{{eurusd}}"><a href="/home/qingxu/eurusd">情绪(欧元)</a></li>
+            <li class="{{gbpusd}}"><a href="/home/qingxu/gbpusd">情绪(英镑)</a></li>
+            <li class="divider"></li>
+          </ul>
+        </li>
+
+        <li class="dropdown" style="margin-left:20px">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">多单权重<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li class="{{ddqzgold}}"><a href="/home/ddqz/index">多单权重(黄金)</a></li>
+            <li class="{{ddqzeur}}"><a href="/home/ddqz/eurusd">多单权重(欧元)</a></li>
+            <li class="{{ddqzgbp}}"><a href="/home/ddqz/gbpusd">多单权重(英镑)</a></li>
+            <li class="divider"></li>
+          </ul>
+        </li>
+
+        <li class="dropdown" style="margin-left:20px">
+          <a class="dropdown-toggle" data-toggle="dropdown">多单权重行情<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li class="{{ddqzbgold}}"><a href="/home/ddqzb/index">多单权重行情(黄金)</a></li>
+            <li class="{{ddqzbeur}}"><a href="/home/ddqzb/eurusd">多单权重行情(欧元)</a></li>
+            <li class="{{ddqzbgbp}}"><a href="/home/ddqzb/gbpusd">多单权重行情(英镑)</a></li>
+            <li class="divider"></li>
+          </ul>
+        </li>
       </ul>
-    </div><!-- /.navbar-collapse -->
+    </div>
   </div><!-- /.container-fluid -->
 </nav>
