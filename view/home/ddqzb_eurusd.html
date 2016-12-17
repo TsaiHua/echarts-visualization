@@ -12,7 +12,8 @@
 {% endblock %}
 
 {% block connect %}
-<div id="main" style="width:90%;height:800px;"></div>
+<div id="main" style="width:90%;height:700px;"></div>
+<!-- <div id="main" class="container-fluid"></div> -->
 <script>
 function splitData(rawData) {
   var time = [];
@@ -29,17 +30,23 @@ function splitData(rawData) {
       sf: sf
   };
 }
-// $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=gbpusd',function(data){
-$.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(rawData){
-// $.getJSON('/static/json/data-ddqzb-eurusd.json',function(rawData){
+// $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GOLD ',function(rawData){
+  // $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GBPUSD',function(rawData){
+  $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(rawData){
+// $.getJSON('/static/json/data-ddqzb-index.json',function(rawData){
     var data = splitData(rawData);
     var myChart = echarts.init(document.getElementById('main'));
+    window.onresize = myChart.resize;
     myChart.setOption(option = {
         animation: false,
+        title: {
+        text: '多单权重行情（欧元）',
+        left: 'center'
+        },
         legend: {
-            right: '2%',
-            top:'40%',
-            orient:'vertical',
+            right: '8%',
+            top:'4%',
+            // orient:'vertical',
             data: ['最新价', '算法']
         },
         tooltip: {
@@ -57,7 +64,7 @@ $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(ra
             {
                 left: '10%',
                 right: '8%',
-                top: '45%',
+                top: '52%',
                 height: '35%'
             }
         ],
@@ -69,6 +76,7 @@ $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(ra
                 boundaryGap : false,
                 axisLine: {onZero: false},
                 splitLine: {show: true},
+                axisLabel:{margin : 18},
                 // splitNumber: 20,
                 min: 'dataMin',
                 max: 'dataMax'
@@ -80,9 +88,10 @@ $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(ra
                 scale: true,
                 boundaryGap : false,
                 axisLine: {onZero: false},
-                axisTick: {show: false},
+                axisTick: {length :5},
                 splitLine: {show: true},
-                axisLabel: {show: true},
+                axisLabel: {show: true,
+                margin : 18},
                 splitNumber: 20,
                 min: 'dataMin',
                 max: 'dataMax'
@@ -96,14 +105,13 @@ $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(ra
                 }
             },
             {
-                scale: true,
+                type: 'value',
                 gridIndex: 1,
-                // data:data.sf,
-                splitNumber: 2,
-                axisLabel: {show: false},
-                axisLine: {show: false},
-                axisTick: {show: false},
-                splitLine: {show: false}
+                data:data.sf,
+                scale: true,
+                splitArea: {
+                    show: true
+                }
             }
         ],
         dataZoom: [
@@ -117,7 +125,7 @@ $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(ra
                 show: true,
                 xAxisIndex: [0,1],
                 type: 'slider',
-                top: '85%',
+                top: '93%',
                 start: 98,
                 end: 100
             }
