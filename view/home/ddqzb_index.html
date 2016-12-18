@@ -12,7 +12,8 @@
 {% endblock %}
 
 {% block connect %}
-<div id="main" style="width:90%;height:700px;"></div>
+<div id="main" style="width:90%;height:300px;"></div>
+<div id="main1" style="width:90%;height:300px;"></div>
 <script>
 function splitData(rawData) {
   var time = [];
@@ -40,7 +41,7 @@ $.getJSON('/static/json/data-ddqzb-index.json',function(rawData){
     var myChart = echarts.init(document.getElementById('main'));
     window.onresize = myChart.resize;
     myChart.setOption(option = {
-        animation: true,
+        animation: false,
         title: {
             text: '多单权重行情（黄金）',
             left: 'center',
@@ -74,29 +75,26 @@ $.getJSON('/static/json/data-ddqzb-index.json',function(rawData){
         ],
         xAxis: [
             {
-                type: 'category',
                 data: data.time,
                 boundaryGap : false,
                 axisLine: {onZero: false},
                 splitLine: {show: true},
-                axisLabel:{margin : 18},
-                min: 'dataMin',
-                max: 'dataMax',
+                axisTick: {show :false},
+                axisLabel:{
+                  show:false,
+                  margin : 18,
+                },
             },
             {
-                type: 'category',
                 gridIndex: 1,
                 data: data.time,
-                scale: true,
                 boundaryGap : false,
                 axisLine: {onZero: false},
-                axisTick: {length :5},
                 splitLine: {show: true},
-                axisLabel: {show: true,
-                margin : 18},
-                splitNumber: 20,
-                min: 'dataMin',
-                max: 'dataMax',
+                axisLabel: {
+                  show: true,
+                  margin : 18,
+                },
             }
         ],
         yAxis: [
@@ -109,7 +107,6 @@ $.getJSON('/static/json/data-ddqzb-index.json',function(rawData){
             },
             {
                 name : '权重值',
-                type: 'value',
                 gridIndex: 1,
                 scale: true,
                 splitArea: {
