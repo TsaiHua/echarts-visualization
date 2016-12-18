@@ -13,73 +13,72 @@
 
 {% block connect %}
 <div id="main" style="width:90%;height:700px;"></div>
-<!-- <div id="main" class="container-fluid"></div> -->
 <script>
 function splitData(rawData) {
   var time = [];
   var zxj = [];
-  var sf = [];
+  var xqqzz = [];
+  var xhqzz = [];
   for (var i = 0; i < rawData.length; i++) {
       time.push(rawData[i][0]);
       zxj.push(rawData[i][1]);
-      sf.push(rawData[i][2]);
+      xqqzz.push(rawData[i][2]);
+      xhqzz.push(rawData[i][3]);
   }
   return {
       time: time,
       zxj: zxj,
-      sf: sf
+      xqqzz: xqqzz,
+      xhqzz: xhqzz
   };
 }
 // $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GOLD ',function(rawData){
-  // $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GBPUSD',function(rawData){
-  $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(rawData){
+// $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GBPUSD',function(rawData){
+$.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(rawData){
 // $.getJSON('/static/json/data-ddqzb-index.json',function(rawData){
     var data = splitData(rawData);
     var myChart = echarts.init(document.getElementById('main'));
     window.onresize = myChart.resize;
     myChart.setOption(option = {
-        animation: false,
+        animation: true,
         title: {
-        text: '多单权重行情（欧元）',
-        left: 'center'
+            text: '多单权重行情（欧元）',
+            left: 'center',
         },
         legend: {
             right: '8%',
-            top:'4%',
-            // orient:'vertical',
-            data: ['最新价', '算法']
+            top:'51%',
+            data: ['息前权重值','息后权重值'],
         },
         tooltip: {
             trigger: 'axis',
             axisPointer: {
                 type: 'line'
-            }
+            },
         },
         grid: [
             {
                 left: '10%',
                 right: '8%',
-                height: '35%'
+                height: '35%',
             },
             {
                 left: '10%',
                 right: '8%',
-                top: '52%',
-                height: '35%'
-            }
+                top: '54%',
+                height: '35%',
+            },
         ],
         xAxis: [
             {
                 type: 'category',
                 data: data.time,
-                scale: true,
                 boundaryGap : false,
                 axisLine: {onZero: false},
                 splitLine: {show: true},
                 axisLabel:{margin : 18},
-                // splitNumber: 20,
                 min: 'dataMin',
-                max: 'dataMax'
+                max: 'dataMax',
             },
             {
                 type: 'category',
@@ -94,41 +93,42 @@ function splitData(rawData) {
                 margin : 18},
                 splitNumber: 20,
                 min: 'dataMin',
-                max: 'dataMax'
+                max: 'dataMax',
             }
         ],
         yAxis: [
             {
+                name : '最新价',
                 scale: true,
                 splitArea: {
-                    show: true
-                }
+                    show: true,
+                },
             },
             {
+                name : '权重值',
                 type: 'value',
                 gridIndex: 1,
-                data:data.sf,
                 scale: true,
                 splitArea: {
-                    show: true
-                }
-            }
+                    show: true,
+                },
+            },
         ],
         dataZoom: [
             {
                 type: 'inside',
                 xAxisIndex: [0,1],
-                start: 98,
-                end: 100
+                start: 45,
+                end: 50,
             },
             {
                 show: true,
                 xAxisIndex: [0,1],
                 type: 'slider',
-                top: '93%',
-                start: 98,
-                end: 100
-            }
+                top: '95%',
+                start: 45,
+                end: 50,
+            },
         ],
         series: [
             {
@@ -138,12 +138,19 @@ function splitData(rawData) {
                 smooth: true,
             },
             {
-                name: '算法',
+                name: '息前权重值',
                 type: 'line',
                 xAxisIndex: 1,
                 yAxisIndex: 1,
-                data: data.sf
-            }
+                data: data.xqqzz,
+            },
+            {
+                name: '息后权重值',
+                type: 'line',
+                xAxisIndex: 1,
+                yAxisIndex: 1,
+                data: data.xhqzz,
+            },
         ]
     }, true);
   });
