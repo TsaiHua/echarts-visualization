@@ -12,7 +12,8 @@
 {% endblock %}
 
 {% block connect %}
-<div id="main" style="width:90%;height:700px;"></div>
+<div id="main1" style="height:250px;"></div>
+<div id="main2" style="height:250px;"></div>
 <script>
 function splitData(rawData) {
   var time = [];
@@ -37,17 +38,83 @@ $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GBPUSD',function(ra
 // $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(rawData){
 // $.getJSON('/static/json/data-ddqzb-index.json',function(rawData){
     var data = splitData(rawData);
-    var myChart = echarts.init(document.getElementById('main'));
-    window.onresize = myChart.resize;
-    myChart.setOption(option = {
-        animation: true,
+
+    var myChart1 = echarts.init(document.getElementById('main1'));
+    myChart1.setOption(option = {
+        animation: false,
         title: {
             text: '多单权重行情（英镑）',
             left: 'center',
         },
         legend: {
             right: '8%',
-            top:'51%',
+            top:'12%',
+            data: ['最新价'],
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'line'
+            },
+        },
+        grid: [
+            {
+                left: '10%',
+                right: '8%',
+                height: '65%',
+            },
+        ],
+        xAxis: [
+            {
+                data: data.time,
+                boundaryGap : false,
+                axisLine: {onZero: false},
+                splitLine: {show: true},
+                axisTick: {show :true},
+                axisLabel:{
+                  show:true,
+                  margin : 18,
+                },
+            },
+        ],
+        yAxis: [
+            {
+                scale: true,
+                splitArea: {
+                    show: true,
+                },
+            },
+        ],
+        dataZoom: [
+            {
+                type: 'inside',
+                start: 95,
+                end: 100,
+            },
+            {
+                show: false,
+                type: 'slider',
+                top: '100%',
+                start: 95,
+                end: 100,
+            },
+        ],
+        series: [
+            {
+                name: '最新价',
+                type: 'line',
+                data: data.zxj,
+                smooth: true,
+            },
+        ]
+    }, true);
+
+    var myChart2 = echarts.init(document.getElementById('main2'));
+    myChart2.setOption(option = {
+        animation: false,
+        legend: {
+            right: '8%',
+            top:'4%',
             data: ['息前权重值','息后权重值'],
         },
         tooltip: {
@@ -60,54 +127,25 @@ $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GBPUSD',function(ra
             {
                 left: '10%',
                 right: '8%',
-                height: '35%',
-            },
-            {
-                left: '10%',
-                right: '8%',
-                top: '54%',
-                height: '35%',
+                top:'12%',
+                height: '60%',
             },
         ],
         xAxis: [
             {
-                type: 'category',
                 data: data.time,
                 boundaryGap : false,
                 axisLine: {onZero: false},
                 splitLine: {show: true},
-                axisLabel:{margin : 18},
-                min: 'dataMin',
-                max: 'dataMax',
+                axisTick: {show :true},
+                axisLabel:{
+                  show:true,
+                  margin : 18,
+                },
             },
-            {
-                type: 'category',
-                gridIndex: 1,
-                data: data.time,
-                scale: true,
-                boundaryGap : false,
-                axisLine: {onZero: false},
-                axisTick: {length :5},
-                splitLine: {show: true},
-                axisLabel: {show: true,
-                margin : 18},
-                splitNumber: 20,
-                min: 'dataMin',
-                max: 'dataMax',
-            }
         ],
         yAxis: [
             {
-                name : '最新价',
-                scale: true,
-                splitArea: {
-                    show: true,
-                },
-            },
-            {
-                name : '权重值',
-                type: 'value',
-                gridIndex: 1,
                 scale: true,
                 splitArea: {
                     show: true,
@@ -117,42 +155,38 @@ $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GBPUSD',function(ra
         dataZoom: [
             {
                 type: 'inside',
-                xAxisIndex: [0,1],
-                start: 45,
-                end: 50,
+                start: 95,
+                end: 100,
             },
             {
                 show: true,
-                xAxisIndex: [0,1],
                 type: 'slider',
-                top: '95%',
-                start: 45,
-                end: 50,
+                top: '88%',
+                start: 95,
+                end: 100,
             },
         ],
         series: [
             {
-                name: '最新价',
-                type: 'line',
-                data: data.zxj,
-                smooth: true,
-            },
-            {
                 name: '息前权重值',
                 type: 'line',
-                xAxisIndex: 1,
-                yAxisIndex: 1,
                 data: data.xqqzz,
             },
             {
                 name: '息后权重值',
                 type: 'line',
-                xAxisIndex: 1,
-                yAxisIndex: 1,
                 data: data.xhqzz,
             },
         ]
     }, true);
+
+    echarts.connect([myChart1, myChart2]);
+    setTimeout(function (){
+      window.onresize = function () {
+        myChart1.resize();
+        myChart2.resize();
+      }
+    },200)
   });
   </script>
 {% endblock %}
