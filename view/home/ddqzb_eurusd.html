@@ -35,7 +35,7 @@ function splitData(rawData) {
 }
 // $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GOLD ',function(rawData){
 // $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GBPUSD',function(rawData){
-$.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(rawData){
+$.getJSON('http://{{hostname}}:8012/v1/interest/bili?symbol=EURUSD',function(rawData){
 // $.getJSON('/static/json/data-ddqzb-index.json',function(rawData){
     var data = splitData(rawData);
 

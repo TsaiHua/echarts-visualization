@@ -1,5 +1,5 @@
 'use strict';
-
+//var http = require("http");
 import Base from './base.js';
 
 export default class extends Base {
@@ -9,6 +9,7 @@ export default class extends Base {
    */
   indexAction(){
     this.assign("title", "多单权重比（黄金）");
+    this.assign("hostname",this.http.hostname);
     this.assign("ddqzbgold", "active");
     return this.display();
   }
@@ -18,6 +19,7 @@ export default class extends Base {
    */
   gbpusdAction(){
     this.assign("title", "多单权重比（英镑）");
+    this.assign("hostname",this.http.hostname);
     this.assign("ddqzbgbp", "active");
     return this.display();
   }
@@ -27,6 +29,7 @@ export default class extends Base {
    */
   eurusdAction(){
     this.assign("title", "多单权重比（欧元）");
+    this.assign("hostname",this.http.hostname);
     this.assign("ddqzbeur", "active");
     return this.display();
   }
