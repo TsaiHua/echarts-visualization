@@ -38,7 +38,8 @@ myChart1.showLoading({
   text: '加载数据，请稍候。',
   color: '#c23531',
 });
-$.getJSON('http://{{hostname}}:8012/v1/interest/bili?symbol=GOLD',function(rawData){
+$.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GOLD',function(rawData){
+// $.getJSON('http://{{hostname}}:8012/v1/interest/bili?symbol=GOLD',function(rawData){
 // $.getJSON('http://{{hostname}}:8012/v1/interest/bili?symbol=GBPUSD',function(rawData){
 // $.getJSON('http://{{hostname}}:8012/v1/interest/bili?symbol=EURUSD',function(rawData){
     var data = splitData(rawData);

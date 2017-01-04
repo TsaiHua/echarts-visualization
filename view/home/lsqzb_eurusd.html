@@ -11,111 +11,74 @@
 {% endblock %}
 
 {% block connect %}
-<div id="main1" style="height:250px;"></div>
-<div id="main2" style="height:250px;"></div>
+<a href="javascript:;" id="prev">上一周</a>
+<a href="javascript:;" id="next">下一周</a>
+
+<div id="main1" style="height:400px;"></div>
 <script>
+var geturl=GetRequest();
+var p = geturl.page || 0;
+$("#next").on('click',function(){
+    if (p < 1){
+        return false;
+    }
+    getJSONData(p);
+    p--;
+});
+
+$("#prev").on('click',function(){
+    getJSONData(p);
+    p++;
+})
+
+function GetRequest() {
+  var url = location.search; //获取url中"?"符后的字串
+   var theRequest = new Object();
+   if (url.indexOf("?") != -1) {
+      var str = url.substr(1);
+      strs = str.split("&");
+      for(var i = 0; i < strs.length; i ++) {
+         theRequest[strs[i].split("=")[0]]=(strs[i].split("=")[1]);
+      }
+   }
+   return theRequest;
+}
+
 var myChart1 = echarts.init(document.getElementById('main1'));
-var myChart2 = echarts.init(document.getElementById('main2'));
 function splitData(rawData) {
   var time = [];
-  var zxj = [];
   var xqqzz = [];
   var xhqzz = [];
   for (var i = 0; i < rawData.length; i++) {
       time.push(rawData[i][0]);
-      zxj.push(rawData[i][1]);
-      xqqzz.push(rawData[i][2]);
-      xhqzz.push(rawData[i][3]);
+      xqqzz.push(rawData[i][1]);
+      xhqzz.push(rawData[i][2]);
   }
   return {
       time: time,
-      zxj: zxj,
       xqqzz: xqqzz,
       xhqzz: xhqzz
   };
 }
-myChart1.showLoading({
-  text: '加载数据，请稍候。',
-  color: '#c23531',
-});
-$.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(rawData){
-// $.getJSON('http://{{hostname}}:8012/v1/interest/bili?symbol=EURUSD',function(rawData){
+
+function getJSONData(p){
+  myChart1.showLoading({
+    text: '加载数据，请稍候。',
+    color: '#c23531',
+  });
+  $.getJSON('http://192.168.1.118:8012/v1/interest/duodan?page='+ p +'&symbol=eurusd',function(rawData){
+    console.log(rawData);
     var data = splitData(rawData);
     myChart1.hideLoading();
     myChart1.setOption(option = {
         animation: false,
         title: {
-            text: '多单权重行情（欧元）',
+            text: '历史权重比（欧元）',
             left: 'center',
         },
         legend: {
             right: '8%',
-            top:'12%',
-            data: ['最新价'],
-        },
-        tooltip: {
-            trigger: 'axis',
-            transitionDuration:0,//无延迟显示。
-            axisPointer: {
-                type: 'line'
-            },
-        },
-        grid: [
-            {
-                left: '10%',
-                right: '8%',
-                height: '60%',
-            },
-        ],
-        xAxis: [
-            {
-                data: data.time,
-                boundaryGap : false,
-                axisLine: {onZero: false},
-                splitLine: {show: true},
-                axisTick: {show :true},
-                axisLabel:{
-                  show:true,
-                  margin : 18,
-                },
-            },
-        ],
-        yAxis: [
-            {
-                scale: true,
-                splitArea: {
-                    show: true,
-                },
-            },
-        ],
-        dataZoom: [
-            {
-                type: 'inside',
-                start: 95,
-                end: 100,
-            },
-            {
-                show: false,
-                type: 'slider',
-                top: '100%',
-                start: 95,
-                end: 100,
-            },
-        ],
-        series: [
-            {
-                name: '最新价',
-                type: 'line',
-                data: data.zxj,
-                smooth: true,
-            },
-        ]
-    }, true);
-    myChart2.setOption(option = {
-        animation: false,
-        legend: {
-            right: '8%',
-            top:'4%',
+            top:'8%',
             data: ['息前权重值','息后权重值'],
         },
         tooltip: {
@@ -129,7 +92,6 @@ $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(ra
             {
                 left: '10%',
                 right: '8%',
-                top:'12%',
                 height: '60%',
             },
         ],
@@ -163,7 +125,7 @@ $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(ra
             {
                 show: true,
                 type: 'slider',
-                top: '88%',
+                top: '90%',
                 start: 95,
                 end: 100,
             },
@@ -191,13 +153,14 @@ $.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=EURUSD',function(ra
             },
         ]
     }, true);
-    echarts.connect([myChart1, myChart2]);
-    setTimeout(function (){
-      window.onresize = function () {
-        myChart1.resize();
-        myChart2.resize();
-      }
-    },200)
-  });
+  })
+};
+getJSONData(0);
+  setTimeout(function (){
+    window.onresize = function () {
+      myChart1.resize();
+    }
+  },200)
+
   </script>
 {% endblock %}
