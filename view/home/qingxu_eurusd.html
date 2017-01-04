@@ -1,83 +1,132 @@
 {% extends "../common/layout_home.html" %}
 
 {% block css %}
-<link rel="stylesheet" type="text/css" href="https://os.alipayobjects.com/rmsportal/UBXCMkzNVlaZYNs.css">
 <link rel="stylesheet" href="/static/css/bootstrap.min.css">
 {% endblock %}
 
 {% block js %}
 <script src="https://a.alipayobjects.com/jquery/jquery/1.11.1/jquery.js"></script>
-<script src="https://a.alipayobjects.com/g/datavis/g2/2.1.5/g2.js"></script>
-<script src="https://as.alipayobjects.com/g/datavis/g-plugin-range/0.0.9/index.js"></script>
+<script src="http://cdn.bootcss.com/echarts/3.3.2/echarts.common.min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
 {% endblock %}
 
 {% block connect %}
-<div id="c1" class="container-fluid"></div>
-<div id="range" class="container-fluid" style="margin-right:30px;"></div>
+<div id="main" style="height:400px;"></div>
 <script>
-  //$.getJSON('http://rmapi.niupixuan.me/v1/interest/percent?symbol=eurusd&limit=all',function(data){
-  $.getJSON('http://rmapi.niupixuan.me/v1/interest/percent?symbol=eurusd',function(data){
-  //$.getJSON('/static/json/data-temp.json',function(data){
-    var Frame = G2.Frame;
-    var frame = new Frame(data);
-    frame = Frame.combinColumns(frame, ['息前次数','息后手数','息后次数','息前手数'], 'value', 'type', 'time');
-    var chart = new G2.Chart({
-      id: 'c1',
-      forceFit:'true',//宽度自动
-      height : 500,
-      plotCfg: {
-        margin: [20, 120, 80, 80]
-      }
-    });
-    chart.source(frame, {
-      time: {
-        type: 'timeCat',
-        nice: false,
-        mask: 'yyyy/mm/dd hh:MM:ss',
-        tickCount: 6
+var myChart = echarts.init(document.getElementById('main'));
+myChart.showLoading({
+  text:'',
+  color:'red',
+})
+function splitData(rawData) {
+  var time = [];
+  var xqss = [];
+  var xqcs = [];
+  var xhss = [];
+  var xhcs = [];
+  for (var i = 0; i < rawData.length; i++) {
+      time.push(rawData[i][0]);
+      xqss.push(rawData[i][1]);
+      xqcs.push(rawData[i][2]);
+      xhss.push(rawData[i][3]);
+      xhcs.push(rawData[i][4]);
+  }
+  return {
+      time: time,
+      xqss: xqss,
+      xqcs: xqcs,
+      xhss: xhss,
+      xhcs: xhcs
+  };
+}
+setTimeout(function(){
+  $.get('http://192.168.1.118:8012/v1/interest/percentv?symbol=eurusd', function (rawData) {
+  // $.get('/static/json/data-qingxu-new.json', function (rawData) {
+  var data = splitData(rawData);
+  myChart.hideLoading();
+  myChart.setOption(option = {
+      animation: false,
+      title: {
+          text: '情绪（欧元）',
+          left: 'center',
       },
-      value: {
-        alias: ' '
+      legend: {
+          right: '8%',
+          top:'8%',
+          data: ['息前手数', '息前次数', '息后手数', '息后次数']
       },
-      type:{
-        alias:'类型',
-        value: ['息前手数','息前次数','息后手数','息后次数'], //定义顺序
-      }
-    });
-    chart.axis('time', {
-      tickLine: {
-        stroke: '#000',
-        value: 6
+      tooltip: {
+          trigger: 'axis',
+          transitionDuration:0.2,
+          axisPointer: {
+              type: 'line'
+          }
       },
-      title: null
-    });
-    chart.axis('value', {
-      tickLine: {
-        stroke: '#000',
-        value: 6
-      },
-      labels: {
-        label: {
-          fill: '#000'
-        }
-      },
-      line: {
-        stroke: '#000'
-      },
-      grid: null
-    });
-    chart.line().position('time*value').color('type', ['#1f77b4', '#ff7f0e', '#2ca02c','#A020F0']).shape('spline').size(2);
-    chart.render();
-    var range = new G2.Plugin.range({
-      id: "range",
-      forceFit:'true',//宽度自动
-      height: 30,
-      dim: 'time'
-    });
-    range.source(frame);
-    range.link([chart]);
-    range.render();
+      grid: [
+          {
+              left: '10%',
+              right: '8%',
+              height: '60%'
+          }
+      ],
+      xAxis: {
+              type: 'category',
+              data: data.time,
+              scale: true,
+              boundaryGap : false,
+              axisLine: {onZero: false},
+              splitLine: {show: false},
+          },
+      yAxis: {
+              scale: true,
+              splitArea: {
+                  show: true
+              }
+          },
+      dataZoom: [
+          {
+              type: 'inside',
+              throttle:0,
+              start: 95,
+              end: 100
+          },
+          {
+              show: true,
+              type: 'slider',
+              top: '85%',
+              // handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+              handleSize:'50%',
+              // labelFormatter:'aaaa  {value} bbbb',
+          }
+      ],
+      series: [
+          {
+              name: '息前手数',
+              type: 'line',
+              data: data.xqss,
+              smooth: true,
+          },
+          {
+              name: '息前次数',
+              type: 'line',
+              data: data.xqcs,
+              smooth: true,
+          },
+          {
+              name: '息后手数',
+              type: 'line',
+              data: data.xhss,
+              smooth: true,
+          },
+          {
+              name: '息后次数',
+              type: 'line',
+              data: data.xhcs,
+              smooth: true,
+          },
+      ]
   });
+  });
+},500)
 </script>
 {% endblock %}
