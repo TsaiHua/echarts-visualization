@@ -11,9 +11,8 @@
 {% endblock %}
 
 {% block connect %}
-<a href="javascript:;" id="prev">上一周</a>
-<a href="javascript:;" id="next">下一周</a>
-
+<a href="javascript:;" id="prev">上一页</a>
+<a href="javascript:;" id="next">下一页</a>
 <div id="main1" style="height:400px;"></div>
 <script>
 var geturl=GetRequest();
@@ -22,13 +21,15 @@ $("#next").on('click',function(){
     if (p < 1){
         return false;
     }
-    getJSONData(p);
     p--;
+    console.log(p);
+    getJSONData(p);
 });
 
 $("#prev").on('click',function(){
-    getJSONData(p);
     p++;
+    getJSONData(p);
+    console.log(p);
 })
 
 function GetRequest() {
@@ -66,9 +67,22 @@ function getJSONData(p){
     text: '加载数据，请稍候。',
     color: '#c23531',
   });
+  // $.getJSON('http://192.168.1.118:8012/v1/interest/duodan?page='+ p+'&symbol=gold',function(rawData){
   $.getJSON('http://192.168.1.118:8012/v1/interest/duodan?page='+ p+'&symbol=gbpusd',function(rawData){
-    console.log(rawData);
+  // $.getJSON('http://192.168.1.118:8012/v1/interest/duodan?page='+ p +'&symbol=eurusd',function(rawData){
+
     var data = splitData(rawData);
+    // console.log(data.time[0]);
+    (function (){
+      if (data.time[0] === '2016-11-28 02:30:27') {
+        document.getElementById("prev").style.display = "none";
+      };
+    })();
+  　(function (){
+      if (data.time[0] !== '2016-11-28 02:30:27') {
+        document.getElementById("prev").style.display = "inline-block";
+      };
+  　})();
     myChart1.hideLoading();
     myChart1.setOption(option = {
         animation: false,
@@ -119,14 +133,14 @@ function getJSONData(p){
         dataZoom: [
             {
                 type: 'inside',
-                start: 95,
+                start: 0,
                 end: 100,
             },
             {
                 show: true,
                 type: 'slider',
                 top: '90%',
-                start: 95,
+                start: 0,
                 end: 100,
             },
         ],
