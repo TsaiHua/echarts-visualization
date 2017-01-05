@@ -34,170 +34,206 @@ function splitData(rawData) {
       xhqzz: xhqzz
   };
 }
-myChart1.showLoading({
-  text: '加载数据，请稍候。',
-  color: '#c23531',
-});
-$.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GBPUSD',function(rawData){
-// $.getJSON('http://{{hostname}}:8012/v1/interest/bili?symbol=GBPUSD',function(rawData){
-    var data = splitData(rawData);
-    myChart1.hideLoading();
-    myChart1.setOption(option = {
-        animation: false,
-        title: {
-            text: '多单权重行情（英镑）',
-            left: 'center',
+myChart1.setOption({
+    animation: false,
+    title: {
+        text: '多单权重行情（英镑）',
+        left: 'center',
+    },
+    legend: {
+        right: '8%',
+        top:'12%',
+        data: ['最新价'],
+    },
+    tooltip: {
+        trigger: 'axis',
+        transitionDuration:0,//无延迟显示。
+        axisPointer: {
+            type: 'line'
         },
-        legend: {
+    },
+    grid: [
+        {
+            left: '10%',
+            right: '8%',
+            height: '60%',
+        },
+    ],
+    xAxis: [
+        {
+            data: [],
+            boundaryGap : false,
+            axisLine: {onZero: false},
+            splitLine: {show: true},
+            axisTick: {show :true},
+            axisLabel:{
+              show:true,
+              margin : 18,
+            },
+        },
+    ],
+    yAxis: [
+        {
+            scale: true,
+            splitArea: {
+                show: true,
+            },
+        },
+    ],
+    dataZoom: [
+        {
+            type: 'inside',
+            start: 95,
+            end: 100,
+        },
+        {
+            show: false,
+            type: 'slider',
+            top: '100%',
+            start: 95,
+            end: 100,
+        },
+    ],
+    series: [
+        {
+            name: '最新价',
+            type: 'line',
+            data: [],
+            smooth: true,
+        },
+    ]
+}, true);
+myChart2.setOption({
+    animation: false,
+    legend: {
+        right: '8%',
+        top:'4%',
+        data: ['息前权重值','息后权重值'],
+    },
+    tooltip: {
+        trigger: 'axis',
+        transitionDuration:0,//无延迟显示。
+        axisPointer: {
+            type: 'line'
+        },
+    },
+    grid: [
+        {
+            left: '10%',
             right: '8%',
             top:'12%',
-            data: ['最新价'],
+            height: '60%',
         },
-        tooltip: {
-            trigger: 'axis',
-            transitionDuration:0,//无延迟显示。
-            axisPointer: {
-                type: 'line'
+    ],
+    xAxis: [
+        {
+            data: [],
+            boundaryGap : false,
+            axisLine: {onZero: false},
+            splitLine: {show: true},
+            axisTick: {show :true},
+            axisLabel:{
+              show:true,
+              margin : 18,
             },
         },
-        grid: [
-            {
-                left: '10%',
-                right: '8%',
-                height: '60%',
+    ],
+    yAxis: [
+        {
+            scale: true,
+            splitArea: {
+                show: true,
             },
-        ],
-        xAxis: [
+        },
+    ],
+    dataZoom: [
+        {
+            type: 'inside',
+            start: 95,
+            end: 100,
+        },
+        {
+            show: true,
+            type: 'slider',
+            top: '88%',
+            start: 95,
+            end: 100,
+        },
+    ],
+    series: [
+        {
+            name: '息前权重值',
+            type: 'line',
+            data: [],
+            itemStyle:{
+              normal:{
+                color:'green',
+              },
+            },
+        },
+        {
+            name: '息后权重值',
+            type: 'line',
+            data: [],
+            itemStyle:{
+              normal:{
+                color:'blue',
+              },
+            },
+        },
+    ]
+}, true);
+myChart1.showLoading({
+  text: '加载数据，请稍候。',
+  color: 'red',
+});
+myChart2.showLoading({
+  text: '加载数据，请稍候。',
+  color: 'red',
+});
+setInterval(function () {
+$.getJSON('http://rmapi.niupixuan.me/v1/interest/bili?symbol=GBPUSD',function(rawData){
+// $.getJSON('http://{{hostname}}:8012/v1/interest/bili?symbol=GOLD',function(rawData){
+// $.getJSON('http://{{hostname}}:8012/v1/interest/bili?symbol=GBPUSD',function(rawData){
+// $.getJSON('http://{{hostname}}:8012/v1/interest/bili?symbol=EURUSD',function(rawData){
+    var data = splitData(rawData);
+    myChart1.hideLoading();
+    myChart2.hideLoading();
+    myChart1.setOption({
+        xAxis:
             {
                 data: data.time,
-                boundaryGap : false,
-                axisLine: {onZero: false},
-                splitLine: {show: true},
-                axisTick: {show :true},
-                axisLabel:{
-                  show:true,
-                  margin : 18,
-                },
             },
-        ],
-        yAxis: [
-            {
-                scale: true,
-                splitArea: {
-                    show: true,
-                },
-            },
-        ],
-        dataZoom: [
-            {
-                type: 'inside',
-                start: 95,
-                end: 100,
-            },
-            {
-                show: false,
-                type: 'slider',
-                top: '100%',
-                start: 95,
-                end: 100,
-            },
-        ],
         series: [
             {
                 name: '最新价',
-                type: 'line',
                 data: data.zxj,
-                smooth: true,
             },
         ]
-    }, true);
-    myChart2.setOption(option = {
-        animation: false,
-        legend: {
-            right: '8%',
-            top:'4%',
-            data: ['息前权重值','息后权重值'],
-        },
-        tooltip: {
-            trigger: 'axis',
-            transitionDuration:0,//无延迟显示。
-            axisPointer: {
-                type: 'line'
-            },
-        },
-        grid: [
-            {
-                left: '10%',
-                right: '8%',
-                top:'12%',
-                height: '60%',
-            },
-        ],
-        xAxis: [
-            {
+    });
+    myChart2.setOption({
+        xAxis: {
                 data: data.time,
-                boundaryGap : false,
-                axisLine: {onZero: false},
-                splitLine: {show: true},
-                axisTick: {show :true},
-                axisLabel:{
-                  show:true,
-                  margin : 18,
-                },
             },
-        ],
-        yAxis: [
-            {
-                scale: true,
-                splitArea: {
-                    show: true,
-                },
-            },
-        ],
-        dataZoom: [
-            {
-                type: 'inside',
-                start: 95,
-                end: 100,
-            },
-            {
-                show: true,
-                type: 'slider',
-                top: '88%',
-                start: 95,
-                end: 100,
-            },
-        ],
         series: [
             {
                 name: '息前权重值',
-                type: 'line',
                 data: data.xqqzz,
-                itemStyle:{
-                  normal:{
-                    color:'green',
-                  },
-                },
             },
             {
                 name: '息后权重值',
-                type: 'line',
                 data: data.xhqzz,
-                itemStyle:{
-                  normal:{
-                    color:'blue',
-                  },
-                },
             },
         ]
-    }, true);
-    echarts.connect([myChart1, myChart2]);
-    setTimeout(function (){
+    });
+  });
+},10000);
+  echarts.connect([myChart1, myChart2]);
+  setTimeout(function (){
       window.onresize = function () {
         myChart1.resize();
         myChart2.resize();
       }
     },200)
-  });
   </script>
 {% endblock %}

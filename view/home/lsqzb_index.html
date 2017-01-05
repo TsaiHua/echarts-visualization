@@ -65,7 +65,7 @@ function splitData(rawData) {
 function getJSONData(p){
   myChart1.showLoading({
     text: '加载数据，请稍候。',
-    color: '#c23531',
+    color: 'red',
   });
   $.getJSON('http://192.168.1.118:8012/v1/interest/duodan?page='+ p+'&symbol=gold',function(rawData){
   // $.getJSON('http://192.168.1.118:8012/v1/interest/duodan?page='+ p+'&symbol=gbpusd',function(rawData){

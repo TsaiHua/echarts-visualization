@@ -15,7 +15,7 @@
 <script>
 var myChart = echarts.init(document.getElementById('main'));
 myChart.showLoading({
-  text:'',
+  text:'加载数据，请稍候。',
   color:'red',
 })
 function splitData(rawData) {
@@ -39,94 +39,122 @@ function splitData(rawData) {
       xhcs: xhcs
   };
 }
-setTimeout(function(){
+myChart.setOption({
+    animation: false,
+    title: {
+        text: '情绪（英镑）',
+        left: 'center',
+    },
+    legend: {
+        right: '8%',
+        top:'8%',
+        data: ['息前手数', '息前次数', '息后手数', '息后次数']
+    },
+    tooltip: {
+        trigger: 'axis',
+        transitionDuration:0,
+        axisPointer: {
+            type: 'line'
+        }
+    },
+    grid: [
+        {
+            left: '10%',
+            right: '8%',
+            height: '60%'
+        }
+    ],
+    xAxis: {
+            type: 'category',
+            data: [],
+            scale: true,
+            boundaryGap : false,
+            axisLine: {onZero: false},
+            splitLine: {show: false},
+        },
+    yAxis: {
+            scale: true,
+            splitArea: {
+                show: true
+            }
+        },
+    dataZoom: [
+        {
+            type: 'inside',
+            throttle:0,
+            start: 95,
+            end: 100
+        },
+        {
+            show: true,
+            type: 'slider',
+            top: '85%',
+            handleSize:'50%',
+        }
+    ],
+    series: [
+        {
+            name: '息前手数',
+            type: 'line',
+            data: [],
+            smooth: true,
+        },
+        {
+            name: '息前次数',
+            type: 'line',
+            data: [],
+            smooth: true,
+        },
+        {
+            name: '息后手数',
+            type: 'line',
+            data: [],
+            smooth: true,
+        },
+        {
+            name: '息后次数',
+            type: 'line',
+            data: [],
+            smooth: true,
+        },
+    ]
+});
+setInterval(function(){
+  // $.get('http://192.168.1.118:8012/v1/interest/percentv?symbol=gold', function (rawData) {
   $.get('http://192.168.1.118:8012/v1/interest/percentv?symbol=gbpusd', function (rawData) {
+  // $.get('http://192.168.1.118:8012/v1/interest/percentv?symbol=eurusd', function (rawData) {
   // $.get('/static/json/data-qingxu-new.json', function (rawData) {
   var data = splitData(rawData);
   myChart.hideLoading();
-  myChart.setOption(option = {
-      animation: false,
-      title: {
-          text: '情绪（英镑）',
-          left: 'center',
-      },
-      legend: {
-          right: '8%',
-          top:'8%',
-          data: ['息前手数', '息前次数', '息后手数', '息后次数']
-      },
-      tooltip: {
-          trigger: 'axis',
-          transitionDuration:0.2,
-          axisPointer: {
-              type: 'line'
-          }
-      },
-      grid: [
-          {
-              left: '10%',
-              right: '8%',
-              height: '60%'
-          }
-      ],
+  myChart.setOption({
       xAxis: {
-              type: 'category',
               data: data.time,
-              scale: true,
-              boundaryGap : false,
-              axisLine: {onZero: false},
-              splitLine: {show: false},
           },
-      yAxis: {
-              scale: true,
-              splitArea: {
-                  show: true
-              }
-          },
-      dataZoom: [
-          {
-              type: 'inside',
-              throttle:0,
-              start: 95,
-              end: 100
-          },
-          {
-              show: true,
-              type: 'slider',
-              top: '85%',
-              // handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-              handleSize:'50%',
-              // labelFormatter:'aaaa  {value} bbbb',
-          }
-      ],
       series: [
           {
               name: '息前手数',
-              type: 'line',
               data: data.xqss,
-              smooth: true,
           },
           {
               name: '息前次数',
-              type: 'line',
               data: data.xqcs,
-              smooth: true,
           },
           {
               name: '息后手数',
-              type: 'line',
               data: data.xhss,
-              smooth: true,
           },
           {
               name: '息后次数',
-              type: 'line',
               data: data.xhcs,
-              smooth: true,
           },
       ]
   });
   });
-},500)
+},10000)
+setTimeout(function (){
+    window.onresize = function () {
+      myChart.resize();
+    }
+  },200)
 </script>
 {% endblock %}
