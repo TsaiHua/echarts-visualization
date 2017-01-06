@@ -26,6 +26,7 @@ function splitData(rawData) {
         categoryData.push(rawData[i].splice(0, 1)[0]);
         values.push(rawData[i].splice(0, 4))
     }
+    console.log(categoryData);
     return {
         categoryData: categoryData,
         values: values
@@ -89,9 +90,9 @@ myChart.setOption({
         }
       ]
   });
-setInterval(function(){
+// setInterval(function(){
   $.get('http://192.168.1.118:8012/v1/interest/kxian', function (rawData) {
-  var data = splitData(rawData);
+  var data0 = splitData(rawData);
   myChart.hideLoading();
   myChart.setOption({
       xAxis: {
@@ -105,7 +106,7 @@ setInterval(function(){
         ]
   });
   });
-},600000)
+// },600000)
 setTimeout(function (){
     window.onresize = function () {
       myChart.resize();
