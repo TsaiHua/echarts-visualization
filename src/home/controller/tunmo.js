@@ -10,6 +10,7 @@ export default class extends Base {
   d1Action(){
     this.assign("title", "吞没(1天)");
     this.assign("tunmod1", "active");
+    this.assign("tunmoActive", "active");
     return this.display();
   }
   /**
@@ -19,6 +20,7 @@ export default class extends Base {
   h4Action(){
     this.assign("title", "吞没(4小时)");
     this.assign("tunmoh4", "active");
+      this.assign("tunmoActive", "active");
     return this.display();
   }
   /**
@@ -28,6 +30,7 @@ export default class extends Base {
   h1Action(){
     this.assign("title", "吞没(1小时)");
     this.assign("tunmoh1", "active");
+    this.assign("tunmoActive", "active");
     return this.display();
   }
 }
