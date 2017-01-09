@@ -11,9 +11,30 @@
 {% endblock %}
 
 {% block connect %}
+<a href="javascript:;" id="h1">1小时</a>
+<a href="javascript:;" id="h4">4小时</a>
+<a href="javascript:;" id="d1">1天</a>
 <div id="main" style="height:400px;"></div>
 <script>
 var myChart = echarts.init(document.getElementById('main'));
+var timeInterval = 'H1';
+var category = "黄金（1小时）";
+$("#d1").on('click',function(){
+    timeInterval = 'D1';
+    category = "黄金（1天）";
+    console.log(timeInterval);
+});
+$("#h4").on('click',function(){
+    timeInterval = 'H4';
+    category = "黄金（4小时）";
+    console.log(timeInterval);
+});
+$("#h1").on('click',function(){
+    timeInterval = 'H1';
+    category = "黄金（1小时）";
+    console.log(timeInterval);
+});
+
 myChart.showLoading({
   text:'加载数据，请稍候。',
   color:'red',
@@ -31,23 +52,12 @@ function splitData(rawData) {
         values: values
     };
 }
-var bTime = data0.categoryData[data0.categoryData.length-1];
-var bHighest = data0.values[data0.values.length-1][3];
-var aOpen = data0.values[data0.values.length-2][0];
-var aClose = data0.values[data0.values.length-2][1];
-var bOpen = data0.values[data0.values.length-1][0];
-var bClose = data0.values[data0.values.length-1][1];
-//屯跌
-var tundie = (aOpen < aClose && bOpen > bClose && aOpen > bClose && aClose <= bOpen)?bTime:'';
-console.log(tundie);
-//吞涨
-var tunzhang = (aOpen > aClose && bOpen < bClose && aOpen < bClose && aClose >= bOpen)?bTime:'';
-console.log(tunzhang);
+
 
 myChart.setOption({
     title: {
-      text: '',
-      left: ''
+      text: category,
+      left: 'center'
     },
     tooltip: {
         trigger: 'axis',
@@ -94,15 +104,33 @@ myChart.setOption({
             end: 100
         }
     ],
-    series: []
+    series: [
+      {
+        name: '',
+        type: 'candlestick',
+        data: [],
+      }
+    ]
   });
-// setInterval(function(){
-$.get('http://192.168.1.118:8012/v1/interest/kxian', function (rawData) {
+setInterval(function(){
+$.get('http://192.168.1.118:8012/v1/interest/kxian?symbol=GOLD&time='+timeInterval, function (rawData) {
   var data0 = splitData(rawData);
+  var bTime = data0.categoryData[data0.categoryData.length-1];
+  var bHighest = data0.values[data0.values.length-1][3];
+  var aOpen = data0.values[data0.values.length-2][0];
+  var aClose = data0.values[data0.values.length-2][1];
+  var bOpen = data0.values[data0.values.length-1][0];
+  var bClose = data0.values[data0.values.length-1][1];
+  //屯跌
+  var tundie = (aOpen < aClose && bOpen > bClose && aOpen > bClose && aClose <= bOpen)?bTime:'';
+  console.log(tundie);
+  //吞涨
+  var tunzhang = (aOpen > aClose && bOpen < bClose && aOpen < bClose && aClose >= bOpen)?bTime:'';
+  console.log(tunzhang);
   myChart.hideLoading();
   myChart.setOption({
     title: {
-      text: '吞没（1小时）',
+      text: category,
       left: 'center'
     },
     xAxis: {
@@ -145,7 +173,7 @@ $.get('http://192.168.1.118:8012/v1/interest/kxian', function (rawData) {
     ]
   });
 });
-// },600000)
+},1000*10)
 setTimeout(function (){
     window.onresize = function () {
       myChart.resize();

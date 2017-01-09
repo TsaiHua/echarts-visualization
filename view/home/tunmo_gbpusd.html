@@ -1,0 +1,183 @@
+{% extends "../common/layout_home.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+{% endblock %}
+
+{% block js %}
+<script src="https://a.alipayobjects.com/jquery/jquery/1.11.1/jquery.js"></script>
+<script src="http://cdn.bootcss.com/echarts/3.3.2/echarts.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block connect %}
+<a href="javascript:;" id="h1">1小时</a>
+<a href="javascript:;" id="h4">4小时</a>
+<a href="javascript:;" id="d1">1天</a>
+<div id="main" style="height:400px;"></div>
+<script>
+var myChart = echarts.init(document.getElementById('main'));
+var timeInterval = 'H1';
+var category = "英镑（1小时）";
+$("#d1").on('click',function(){
+    timeInterval = 'D1';``
+    category = "英镑（1天）";
+    console.log(timeInterval);
+});
+$("#h4").on('click',function(){
+    timeInterval = 'H4';
+    category = "英镑（4小时）";
+    console.log(timeInterval);
+});
+$("#h1").on('click',function(){
+    timeInterval = 'H1';
+    category = "英镑（1小时）";
+    console.log(timeInterval);
+});
+
+myChart.showLoading({
+  text:'加载数据，请稍候。',
+  color:'red',
+})
+function splitData(rawData) {
+    var categoryData = [];
+    var values = [];
+    for (var i = 0; i < rawData.length-1; i++) {
+    // for (var i=rawData.length-2;i>=0;i--) {
+        categoryData.push(rawData[i].splice(0, 1)[0]);
+        values.push(rawData[i].splice(0, 4))
+    }
+    return {
+        categoryData: categoryData,
+        values: values
+    };
+}
+
+
+myChart.setOption({
+    title: {
+      text: category,
+      left: 'center'
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'line'
+        }
+    },
+    legend: {
+        data: ['']
+    },
+    grid: {
+        left: '10%',
+        right: '10%',
+        bottom: '15%'
+    },
+    xAxis: {
+        type: 'category',
+        data: [],
+        scale: true,
+        boundaryGap : false,
+        axisLine: {onZero: false},
+        splitLine: {show: false},
+        splitNumber: 20,
+        min: 'dataMin',
+        max: 'dataMax'
+    },
+    yAxis: {
+        scale: true,
+        splitArea: {
+            show: true
+        }
+    },
+    dataZoom: [
+        {
+            type: 'inside',
+            start: 90,
+            end: 100
+        },
+        {
+            show: true,
+            type: 'slider',
+            y: '90%',
+            start: 90,
+            end: 100
+        }
+    ],
+    series: [
+      {
+        name: '',
+        type: 'candlestick',
+        data: [],
+      }
+    ]
+  });
+setInterval(function(){
+$.get('http://192.168.1.118:8012/v1/interest/kxian?symbol=GBPUSD&time='+timeInterval, function (rawData) {
+  var data0 = splitData(rawData);
+  var bTime = data0.categoryData[data0.categoryData.length-1];
+  var bHighest = data0.values[data0.values.length-1][3];
+  var aOpen = data0.values[data0.values.length-2][0];
+  var aClose = data0.values[data0.values.length-2][1];
+  var bOpen = data0.values[data0.values.length-1][0];
+  var bClose = data0.values[data0.values.length-1][1];
+  //屯跌
+  var tundie = (aOpen < aClose && bOpen > bClose && aOpen > bClose && aClose <= bOpen)?bTime:'';
+  console.log(tundie);
+  //吞涨
+  var tunzhang = (aOpen > aClose && bOpen < bClose && aOpen < bClose && aClose >= bOpen)?bTime:'';
+  console.log(tunzhang);
+  myChart.hideLoading();
+  myChart.setOption({
+    title: {
+      text: category,
+      left: 'center'
+    },
+    xAxis: {
+      data: data0.categoryData,
+    },
+    series: [
+      {
+        name: '',
+        type: 'candlestick',
+        data: data0.values,
+        markPoint: {
+            symbol:'pin',
+            symbolSize:80,
+            label: {
+                normal: {
+                    show:false,
+                    position:'inside',
+                }
+            },
+            data: [
+            {
+              name: '吞跌',
+              coord: [tundie, bHighest],
+              value:null,
+              itemStyle: {
+                  normal: {color: '#2f4554'}
+              }
+            },
+            {
+              name: '吞涨',
+              coord: [tunzhang, bHighest],
+              value:null,
+              itemStyle: {
+                  normal: {color: '#c23531'}
+              }
+            }
+          ],
+        }
+      }
+    ]
+  });
+});
+},1000*10)
+setTimeout(function (){
+    window.onresize = function () {
+      myChart.resize();
+    }
+  },200)
+</script>
+{% endblock %}
