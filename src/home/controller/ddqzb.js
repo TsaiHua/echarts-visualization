@@ -11,6 +11,7 @@ export default class extends Base {
     this.assign("title", "多单权重比（黄金）");
     this.assign("hostname",this.http.hostname);
     this.assign("ddqzbgold", "active");
+    this.assign("ddqzbActive", "active");
     return this.display();
   }
   /**
@@ -21,6 +22,7 @@ export default class extends Base {
     this.assign("title", "多单权重比（英镑）");
     this.assign("hostname",this.http.hostname);
     this.assign("ddqzbgbp", "active");
+    this.assign("ddqzbActive", "active");
     return this.display();
   }
   /**
@@ -31,6 +33,7 @@ export default class extends Base {
     this.assign("title", "多单权重比（欧元）");
     this.assign("hostname",this.http.hostname);
     this.assign("ddqzbeur", "active");
+    this.assign("ddqzbActive", "active");
     return this.display();
   }
 }
