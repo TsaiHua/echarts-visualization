@@ -26,16 +26,28 @@ function splitData(rawData) {
         categoryData.push(rawData[i].splice(0, 1)[0]);
         values.push(rawData[i].splice(0, 4))
     }
-    console.log(categoryData);
     return {
         categoryData: categoryData,
         values: values
     };
 }
+var bTime = data0.categoryData[data0.categoryData.length-1];
+var bHighest = data0.values[data0.values.length-1][3];
+var aOpen = data0.values[data0.values.length-2][0];
+var aClose = data0.values[data0.values.length-2][1];
+var bOpen = data0.values[data0.values.length-1][0];
+var bClose = data0.values[data0.values.length-1][1];
+//屯跌
+var tundie = (aOpen < aClose && bOpen > bClose && aOpen > bClose && aClose <= bOpen)?bTime:'';
+console.log(tundie);
+//吞涨
+var tunzhang = (aOpen > aClose && bOpen < bClose && aOpen < bClose && aClose >= bOpen)?bTime:'';
+console.log(tunzhang);
+
 myChart.setOption({
     title: {
-      text: '吞没（1小时）',
-      left: 'center'
+      text: '',
+      left: ''
     },
     tooltip: {
         trigger: 'axis',
@@ -71,41 +83,68 @@ myChart.setOption({
     dataZoom: [
         {
             type: 'inside',
-            start: 80,
+            start: 90,
             end: 100
         },
         {
             show: true,
             type: 'slider',
             y: '90%',
-            start: 80,
+            start: 90,
             end: 100
         }
     ],
-    series: [
-        {
-            name: '',
-            type: 'candlestick',
-            data: [],
-        }
-      ]
+    series: []
   });
 // setInterval(function(){
-  $.get('http://192.168.1.118:8012/v1/interest/kxian', function (rawData) {
+$.get('http://192.168.1.118:8012/v1/interest/kxian', function (rawData) {
   var data0 = splitData(rawData);
   myChart.hideLoading();
   myChart.setOption({
-      xAxis: {
-              data: data0.categoryData,
-          },
-      series: [
-          {
-              name: '',
-              data: data0.values,
-          }
-        ]
+    title: {
+      text: '吞没（1小时）',
+      left: 'center'
+    },
+    xAxis: {
+      data: data0.categoryData,
+    },
+    series: [
+      {
+        name: '',
+        type: 'candlestick',
+        data: data0.values,
+        markPoint: {
+            symbol:'pin',
+            symbolSize:80,
+            label: {
+                normal: {
+                    show:false,
+                    position:'inside',
+                }
+            },
+            data: [
+            {
+              name: '吞跌',
+              coord: [tundie, bHighest],
+              value:null,
+              itemStyle: {
+                  normal: {color: '#2f4554'}
+              }
+            },
+            {
+              name: '吞涨',
+              coord: [tunzhang, bHighest],
+              value:null,
+              itemStyle: {
+                  normal: {color: '#c23531'}
+              }
+            }
+          ],
+        }
+      }
+    ]
   });
-  });
+});
 // },600000)
 setTimeout(function (){
     window.onresize = function () {
