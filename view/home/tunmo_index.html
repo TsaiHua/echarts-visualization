@@ -8,12 +8,21 @@
 <script src="https://a.alipayobjects.com/jquery/jquery/1.11.1/jquery.js"></script>
 <script src="http://cdn.bootcss.com/echarts/3.3.2/echarts.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
+<style>
+.ann{
+  width: 48px;height:28px;border: 1px solid #eee;margin:0 10px;display: inline-block;
+        line-height: 28px;text-align: center;border-radius: 5px;text-decoration:none;
+        color: #fff;background-color: green;
+}
+</style>
+
+
 {% endblock %}
 
 {% block connect %}
-<a href="javascript:;" id="h1">1小时</a>
-<a href="javascript:;" id="h4">4小时</a>
-<a href="javascript:;" id="d1">1天</a>
+<a href="javascript:;" id="h1" class="ann" style="margin-left:30px;text-decoration:none;">1小时</a>
+<a href="javascript:;" id="h4" class="ann" style="text-decoration:none;">4小时</a>
+<a href="javascript:;" id="d1" class="ann" style="text-decoration:none;">1天</a>
 <div id="main" style="height:400px;"></div>
 <script>
 var myChart = echarts.init(document.getElementById('main'));
