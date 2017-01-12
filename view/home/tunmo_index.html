@@ -53,7 +53,6 @@ function splitData(rawData) {
     };
 }
 
-
 myChart.setOption({
     title: {
       text: category,
@@ -112,68 +111,82 @@ myChart.setOption({
       }
     ]
   });
-setInterval(function(){
-$.get('http://192.168.1.118:8012/v1/interest/kxian?symbol=GOLD&time='+timeInterval, function (rawData) {
-  var data0 = splitData(rawData);
-  var bTime = data0.categoryData[data0.categoryData.length-1];
-  var bHighest = data0.values[data0.values.length-1][3];
-  var aOpen = data0.values[data0.values.length-2][0];
-  var aClose = data0.values[data0.values.length-2][1];
-  var bOpen = data0.values[data0.values.length-1][0];
-  var bClose = data0.values[data0.values.length-1][1];
-  //屯跌
-  var tundie = (aOpen < aClose && bOpen > bClose && aOpen > bClose && aClose <= bOpen)?bTime:'';
-  console.log(tundie);
-  //吞涨
-  var tunzhang = (aOpen > aClose && bOpen < bClose && aOpen < bClose && aClose >= bOpen)?bTime:'';
-  console.log(tunzhang);
-  myChart.hideLoading();
-  myChart.setOption({
-    title: {
-      text: category,
-      left: 'center'
-    },
-    xAxis: {
-      data: data0.categoryData,
-    },
-    series: [
-      {
-        name: '',
-        type: 'candlestick',
-        data: data0.values,
-        markPoint: {
-            symbol:'pin',
-            symbolSize:80,
-            label: {
-                normal: {
-                    show:false,
-                    position:'inside',
+var loadData = function (){
+  $.get('http://192.168.1.118:8012/v1/interest/kxian?symbol=GOLD&time='+timeInterval, function (rawData) {
+    var data0 = splitData(rawData);
+    var bTime = data0.categoryData[data0.categoryData.length-1];
+    var bHighest = data0.values[data0.values.length-1][3];
+    var aOpen = data0.values[data0.values.length-2][0];
+    var aClose = data0.values[data0.values.length-2][1];
+    var bOpen = data0.values[data0.values.length-1][0];
+    var bClose = data0.values[data0.values.length-1][1];
+    //屯跌
+    var tundie = (aOpen < aClose && bOpen > bClose && aOpen > bClose && aClose <= bOpen)?bTime:'';
+    console.log(tundie);
+    //吞涨
+    var tunzhang = (aOpen > aClose && bOpen < bClose && aOpen < bClose && aClose >= bOpen)?bTime:'';
+    console.log(tunzhang);
+    myChart.hideLoading();
+    myChart.setOption({
+      title: {
+        text: category,
+        left: 'center'
+      },
+      xAxis: {
+        data: data0.categoryData,
+      },
+      series: [
+        {
+          name: '',
+          type: 'candlestick',
+          data: data0.values,
+          markPoint: {
+              symbol:'pin',
+              symbolSize:80,
+              label: {
+                  normal: {
+                      show:false,
+                      position:'inside',
+                  }
+              },
+              data: [
+              {
+                name: '吞跌',
+                coord: [tundie, bHighest],
+                value:null,
+                itemStyle: {
+                    normal: {color: '#2f4554'}
                 }
-            },
-            data: [
-            {
-              name: '吞跌',
-              coord: [tundie, bHighest],
-              value:null,
-              itemStyle: {
-                  normal: {color: '#2f4554'}
+              },
+              {
+                name: '吞涨',
+                coord: [tunzhang, bHighest],
+                value:null,
+                itemStyle: {
+                    normal: {color: '#c23531'}
+                }
               }
-            },
-            {
-              name: '吞涨',
-              coord: [tunzhang, bHighest],
-              value:null,
-              itemStyle: {
-                  normal: {color: '#c23531'}
-              }
-            }
-          ],
+            ],
+          }
         }
-      }
-    ]
+      ]
+    });
   });
-});
-},1000*10)
+};
+loadData();
+
+var date = new Date();
+var dateIntegralPoint = new Date();//用户载入时刻的下一个整点
+dateIntegralPoint.setHours(date.getHours()+1);//小时数增加1
+dateIntegralPoint.setMinutes(0);
+dateIntegralPoint.setSeconds(0);
+console.log(dateIntegralPoint-date+"毫秒后刷新");
+setTimeout("loadData()",dateIntegralPoint-date);//用户载入后的下一个整点执行。
+
+// function loadData(){
+//     IntegralPointExecute();//在整点执行的函数，在每个整点都调用该函数
+//     setInterval(IntegralPointExecute(),60*60*1000);//一个小时执行一次，那么下个整点，下下个整点都会执行
+// }
 setTimeout(function (){
     window.onresize = function () {
       myChart.resize();
