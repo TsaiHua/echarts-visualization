@@ -113,7 +113,8 @@ myChart.setOption({
     ]
   });
 setInterval(function(){
-$.get('http://192.168.1.118:8012/v1/interest/kxian?symbol=GBPUSD&time='+timeInterval, function (rawData) {
+$.get('http://{{hostname}}:8012/v1/interest/kxian?symbol=GBPUSD&time='+timeInterval, function (rawData) {
+// $.get('http://192.168.1.118:8012/v1/interest/kxian?symbol=GBPUSD&time='+timeInterval, function (rawData) {
   var data0 = splitData(rawData);
   var bTime = data0.categoryData[data0.categoryData.length-1];
   var bHighest = data0.values[data0.values.length-1][3];

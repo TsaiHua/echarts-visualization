@@ -9,6 +9,7 @@ export default class extends Base {
    */
   indexAction(){
     this.assign("title", "历史权重比(黄金)");
+    this.assign("hostname",this.http.hostname);
     this.assign("lsqzbgold", "active");
     this.assign("lsqzbActive", "active");
     return this.display();
@@ -19,6 +20,7 @@ export default class extends Base {
    */
   gbpusdAction(){
     this.assign("title", "历史权重比（英镑）");
+    this.assign("hostname",this.http.hostname);
     this.assign("lsqzbgbp", "active");
     this.assign("lsqzbActive", "active");
     return this.display();
@@ -29,6 +31,7 @@ export default class extends Base {
    */
   eurusdAction(){
     this.assign("title", "历史权重比（欧元）");
+    this.assign("hostname",this.http.hostname);
     this.assign("lsqzbeur", "active");
     this.assign("lsqzbActive", "active");
     return this.display();

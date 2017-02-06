@@ -121,7 +121,8 @@ myChart.setOption({
 });
 setInterval(function(){
   // $.get('http://192.168.1.118:8012/v1/interest/percentv?symbol=gold', function (rawData) {
-  $.get('http://192.168.1.118:8012/v1/interest/percentv?symbol=gbpusd', function (rawData) {
+  $.get('http://{{hostname}}:8012/v1/interest/percentv?symbol=gbpusd', function (rawData) {
+  // $.get('http://192.168.1.118:8012/v1/interest/percentv?symbol=gbpusd', function (rawData) {
   // $.get('http://192.168.1.118:8012/v1/interest/percentv?symbol=eurusd', function (rawData) {
   // $.get('/static/json/data-qingxu-new.json', function (rawData) {
   var data = splitData(rawData);

@@ -9,6 +9,7 @@ export default class extends Base {
    */
   indexAction(){
     this.assign("title", "吞没(黄金)");
+    this.assign("hostname",this.http.hostname);
     this.assign("tunmogold", "active");
     this.assign("tunmoActive", "active");
     return this.display();
@@ -19,6 +20,7 @@ export default class extends Base {
    */
   gbpusdAction(){
     this.assign("title", "吞没(英镑)");
+    this.assign("hostname",this.http.hostname);
     this.assign("tunmogbp", "active");
     this.assign("tunmoActive", "active");
     return this.display();
@@ -29,6 +31,7 @@ export default class extends Base {
    */
   eurusdAction(){
     this.assign("title", "吞没(欧元)");
+    this.assign("hostname",this.http.hostname);
     this.assign("tunmoeur", "active");
     this.assign("tunmoActive", "active");
     return this.display();

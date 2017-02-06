@@ -68,7 +68,8 @@ function getJSONData(p){
     color: 'red',
   });
   // $.getJSON('http://192.168.1.118:8012/v1/interest/duodan?page='+ p+'&symbol=gold',function(rawData){
-  $.getJSON('http://192.168.1.118:8012/v1/interest/duodan?page='+ p+'&symbol=gbpusd',function(rawData){
+  // $.getJSON('http://192.168.1.118:8012/v1/interest/duodan?page='+ p+'&symbol=gbpusd',function(rawData){
+  $.getJSON('http://{{hostname}}:8012/v1/interest/duodan?page='+ p+'&symbol=gbpusd',function(rawData){
   // $.getJSON('http://192.168.1.118:8012/v1/interest/duodan?page='+ p +'&symbol=eurusd',function(rawData){
 
     var data = splitData(rawData);
